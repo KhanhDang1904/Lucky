@@ -24,9 +24,9 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => 'Tên đăng nhập',
-            'password' => 'Mật khẩu',
-            'rememberMe' => 'Lưu mật khẩu',
+            'username' => 'username',
+            'password' => 'password',
+            'rememberMe' => 'rememberMe',
         ];
     }
 
@@ -35,7 +35,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Tên đăng nhập hoặc mật khẩu không chính xác');
+                $this->addError($attribute, 'Incorrect username or password');
             }
         }
     }

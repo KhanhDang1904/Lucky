@@ -19,7 +19,7 @@ class PriceSearch extends Price
     public function rules()
     {
         return [
-            [['id','title'], 'integer'],
+            [['title'], 'safe'],
         ];
     }
 

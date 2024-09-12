@@ -20,6 +20,7 @@ class PackageSearch extends Package
     public function rules()
     {
         return [
+            [['title'], 'safe'],
         ];
     }
 

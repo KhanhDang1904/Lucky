@@ -18,6 +18,7 @@ class DailyQuestSearch extends DailyQuest
     public function rules()
     {
         return [
+            [['title'], 'safe'],
         ];
     }
 

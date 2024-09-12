@@ -106,7 +106,7 @@ class HistoryReward extends \yii\db\ActiveRecord
     {
         $arr = [
           '0'=>'<a href="#" class="btn-success-gift" title="Give gift" data-id="'.$this->user_id.'" data-value="'.$this->id.'"><span class="badge badge-warning">Give gift</span></a>',
-          '1'=>'<span class="badge badge-success">Success</span>',
+          '1'=>'<span class="badge badge-success">Received</span>',
           '2'=>'<span class="badge badge-danger">Cancel</span>',
         ];
         return isset($arr[$this->status])?$arr[$this->status]:$arr[2];

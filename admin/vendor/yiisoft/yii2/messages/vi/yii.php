@@ -73,7 +73,7 @@ return [
     'just now' => 'ngay bây giờ',
     'the input value' => 'giá trị đã nhập',
     '{attribute} "{value}" has already been taken.' => '{attribute} "{value}" đã bị sử dụng.',
-    '{attribute} cannot be blank.' => '{attribute} không được để trống.',
+    '{attribute} cannot be blank.' => '{attribute} cannot be left blank.',
     '{attribute} is invalid.' => '{attribute} không hợp lệ.',
     '{attribute} is not a valid URL.' => '{attribute} không phải là URL hợp lệ.',
     '{attribute} is not a valid email address.' => '{attribute} không phải là địa chỉ email hợp lệ.',

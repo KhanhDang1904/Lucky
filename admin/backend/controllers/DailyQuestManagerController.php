@@ -46,7 +46,7 @@ class DailyQuestManagerController extends CoreController
     public function actionIndex()
     {
         $searchModel = new DailyQuestSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index.php', [
             'dataProvider' => $dataProvider,
         ]);

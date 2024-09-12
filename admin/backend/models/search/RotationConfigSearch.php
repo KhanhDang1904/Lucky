@@ -5,6 +5,7 @@ namespace backend\models\search;
 use backend\models\RotationConfig;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\VarDumper;
 
 /**
  * CauhinhSearch represents the model behind the search form about `backend\models\Cauhinh`.
@@ -17,6 +18,7 @@ class RotationConfigSearch extends RotationConfig
     public function rules()
     {
         return [
+            [['title'], 'safe'],
         ];
     }
 

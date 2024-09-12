@@ -26,7 +26,9 @@ $this->params['active_menu'] = 'give-gift';
             'toolbar' => [
                 ['content' =>
                     '<form action="/admin/give-gift">'.
-                    Html::dropDownList('HistorySearch[user_id]',(isset($_GET['HistorySearch']['user_id'])?$_GET['HistorySearch']['user_id']:null),[\yii\helpers\ArrayHelper::map(\common\models\User::find()->all(),'id','hoten')], ['class' => 'form-control select2','prompt'=>'-- Select user --','onchange'=>'$(this).parent().submit()']).
+                    Html::dropDownList('HistorySearch[user_id]',(isset($_GET['HistorySearch']['user_id'])?$_GET['HistorySearch']['user_id']:null),[\yii\helpers\ArrayHelper::map(\common\models\User::find()->all(),'id', function ($element) {
+                        return $element['hoten'] . ' - ' . $element['dien_thoai'];
+                    })], ['class' => 'form-control select2','prompt'=>'-- Select user --','onchange'=>'$(this).parent().submit()']).
                     '</form>'
                 ],
             ],
@@ -38,7 +40,7 @@ $this->params['active_menu'] = 'give-gift';
             'tableOptions' => ['class' => 'table table-borderd table-stripped text-nowrap'],
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="bi bi-list"></i> <span class="text-primary"> Give gift</span>'
+                'heading' => ' <span class="text-primary"> Give gift</span>'
             ],
             'summary' => "Show {begin} - {end} total count {totalCount}",
 

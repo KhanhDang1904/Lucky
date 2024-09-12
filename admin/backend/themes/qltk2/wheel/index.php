@@ -26,7 +26,7 @@ CrudAsset::register($this);
             'columns' => require(__DIR__ . '/_columns.php'),
             'toolbar' => [
                 ['content' =>
-                    '<form class="mr-4" action="/admin/user">'.
+                    '<form class="mr-4" action="/admin/wheel">'.
                     Html::textInput('RotationConfigSearch[title]',(isset($_GET['RotationConfigSearch']['title'])?$_GET['RotationConfigSearch']['title']:''), ['class' => 'form-control','onchange'=>'$(this).parent().submit()', 'placeholder' => 'Search by title']).
                     '</form>'.
                     Html::a('<span class="bi bi-plus-circle"></span> Create','#', ['class' => 'btn btn-primary btn-border-radius btn-create', 'title' => 'Create'])
@@ -40,7 +40,7 @@ CrudAsset::register($this);
             'tableOptions' => ['class' => 'table table-borderd table-stripped text-nowrap'],
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="bi bi-list"></i> <span class="text-primary">Wheel list</span>'
+                'heading' => ' <span class="text-primary">Wheel list</span>'
             ],
             'summary' => "Show {begin} - {end} total count {totalCount}",
 

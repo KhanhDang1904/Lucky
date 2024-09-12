@@ -26,7 +26,7 @@ CrudAsset::register($this);
             'columns' => require(__DIR__ . '/_columns.php'),
             'toolbar' => [
                 ['content' =>
-                    '<form class="mr-4" action="/admin/user">'.
+                    '<form class="mr-4" action="/admin/package">'.
                     Html::textInput('PackageSearch[title]',(isset($_GET['PackageSearch']['title'])?$_GET['PackageSearch']['title']:''), ['class' => 'form-control','onchange'=>'$(this).parent().submit()', 'placeholder' => 'Search by title']).
                     '</form>'.
                     Html::a('<span class="bi bi-plus-circle"></span> Create','#', ['class' => 'btn btn-primary btn-border-radius btn-create', 'title' => 'Create'])
@@ -40,7 +40,7 @@ CrudAsset::register($this);
             'tableOptions' => ['class' => 'table table-borderd table-stripped text-nowrap'],
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="bi bi-list"></i> <span class="text-primary">Package list</span>'
+                'heading' => ' <span class="text-primary">Package list</span>'
             ],
             'summary' => "Show {begin} - {end} total count {totalCount}",
 

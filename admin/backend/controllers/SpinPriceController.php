@@ -9,6 +9,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\HttpException;
 use yii\web\Response;
 
@@ -46,7 +47,7 @@ class SpinPriceController extends CoreController
     public function actionIndex()
     {
         $searchModel = new SpinPriceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index.php', [
             'dataProvider' => $dataProvider,
         ]);
@@ -99,6 +100,7 @@ class SpinPriceController extends CoreController
         }
         $model->title = $this->dataPost['SpinPrice']['title'];
         $model->price = $this->dataPost['SpinPrice']['price'];
+        $model->quantity = $this->dataPost['SpinPrice']['quantity'];
         $model->price = !empty($model->price) ? str_replace(',','',$model->price) : 0;
         $model->quantity = !empty($model->quantity) ? str_replace(',','',$model->quantity) : 0;
         $model->user_id = Yii::$app->user->identity->id;

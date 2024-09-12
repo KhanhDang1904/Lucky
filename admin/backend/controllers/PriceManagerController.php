@@ -45,7 +45,7 @@ class PriceManagerController extends CoreController
     public function actionIndex()
     {
         $searchModel = new PriceSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index.php', [
             'dataProvider' => $dataProvider,
         ]);

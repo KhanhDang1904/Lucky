@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Cauhinh */
-$this->title = 'Sửa cấu hình: '.$model->name;
+$this->title = 'Edit : '.$model->name;
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['active_menu'] = 'config';
 ?>

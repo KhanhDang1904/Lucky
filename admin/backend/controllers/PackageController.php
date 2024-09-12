@@ -46,7 +46,7 @@ class PackageController extends CoreController
     public function actionIndex()
     {
         $searchModel = new PackageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index.php', [
             'dataProvider' => $dataProvider,
         ]);

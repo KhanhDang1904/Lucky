@@ -17,6 +17,7 @@ class SpinPriceSearch extends SpinPrice
     public function rules()
     {
         return [
+            [['title'], 'safe'],
         ];
     }
 

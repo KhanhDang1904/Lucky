@@ -41,7 +41,7 @@ echo $this->render('modal/package/_modal_history');
             'tableOptions' => ['class' => 'table table-borderd table-stripped text-nowrap'],
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="bi bi-list"></i> <span class="text-primary">User list</span>'
+                'heading' => ' <span class="text-primary">User list</span>'
             ],
             'summary' => "Show {begin} - {end} total count {totalCount}",
 

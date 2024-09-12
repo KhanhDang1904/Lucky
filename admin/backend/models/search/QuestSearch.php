@@ -17,6 +17,7 @@ class QuestSearch extends Quest
     public function rules()
     {
         return [
+            [['title'], 'safe'],
         ];
     }
 
