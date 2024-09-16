@@ -24,12 +24,7 @@
                 <span>Price</span>
             </a>
         </li>
-        <li class="nav-item ">
-            <a class="nav-link <?= $this->params['active_menu'] === 'package'?'active':''?> collapsed" href="/admin/package">
-                <i class="bi bi-cart-check"></i>
-                <span>Package</span>
-            </a>
-        </li>
+
         <li class="nav-item ">
             <a class="nav-link <?= $this->params['active_menu'] === 'spin-price'?'active':''?> collapsed" href="/admin/spin-price">
                 <i class="bi bi-cart-plus"></i>
