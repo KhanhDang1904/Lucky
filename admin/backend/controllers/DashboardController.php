@@ -39,6 +39,7 @@ class DashboardController extends CoreApiController
               'id'=>$model['id'],
               'hoten'=>$model['hoten'],
               'phone'=>is_null($model['dien_thoai'])?null:$this->makeString($model['dien_thoai']),
+              'total_point'=>is_null($model['total_point'])?0:number_format($model['total_point']),
             ];
         }
         $dataWeek = [];
@@ -47,6 +48,7 @@ class DashboardController extends CoreApiController
                 'id'=>$model['id'],
                 'hoten'=>$model['hoten'],
                 'phone'=>is_null($model['dien_thoai'])?null:$this->makeString($model['dien_thoai']),
+                'total_point'=>is_null($model['total_point'])?0:number_format($model['total_point']),
             ];
         }
         return $this->outputSuccess(['month'=>$dataMonth,'week'=>$dataWeek]);

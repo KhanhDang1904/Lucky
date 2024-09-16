@@ -10,13 +10,16 @@ $(document).ready(function () {
                       <span>`+(key++)+`</span>
                     </div>
                   </div>
-                  <div class="col-md-10 mt-0 col-10">
+                  <div class="col-md-8 mt-0 col-8">
                     <div class="card-body">
                       <h5 class="card-title text-primary fw-bolder">`+value.hoten+`</h5>
                       <div class="align-items-center content-card d-flex justify-content-between">
                         <span class="price ">`+value.phone+`</span>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-md-2 mt-0 col-2">
+                    `+value.total_point+`
                   </div>
                 </div>
               </div>
@@ -34,13 +37,16 @@ $(document).ready(function () {
                       <span>`+(key++)+`</span>
                     </div>
                   </div>
-                  <div class="col-md-10 mt-0 col-10">
+                  <div class="col-md-8 mt-0 col-8">
                     <div class="card-body">
                       <h5 class="card-title text-primary fw-bolder">`+value.hoten+`</h5>
                       <div class="align-items-center content-card d-flex justify-content-between">
                         <span class="price ">`+value.phone+`</span>
                       </div>
                     </div>
+                  </div>
+                   <div class="col-md-2 mt-0 col-2">
+                    `+value.total_point+`
                   </div>
                 </div>
               </div>
