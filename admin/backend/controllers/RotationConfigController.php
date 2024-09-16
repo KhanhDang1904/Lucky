@@ -20,7 +20,8 @@ class RotationConfigController extends CoreApiController
         foreach ($models as $index=>$model) {
             $data []= [
                 'id'=>$model->id,
-                'text'=>$model->title,
+                'text'=>substr($model->title, 0, 8) . "...",
+                'text_full'=>$model->title,
                 'fillStyle'=>$index%2==0?'#ff9fd6':'#ff36a9',
                 'textStrokeStyle'=>'#DC0C83',
                 'textFontWeight'=>900,

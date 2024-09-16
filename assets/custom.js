@@ -48,7 +48,7 @@ $(document).ready(function () {
         theWheel.draw(); // Gọi draw để hiển thị các thay đổi cho bánh xe.
         wheelSpinning = false; // Đặt lại thành false thành các nút nguồn và quay có thể được bấm lại.
         $(".nutbatdau").css("background-image", "url(/assets/lucky/img/btn-start.png)"); // Hiển thị lại nút Quay
-        $('#notificationModal .text-reward').text(targetSegment.text)
+        $('#notificationModal .text-reward').text(targetSegment.text_full)
         $("#notificationModal").modal("show");
         Ajax('/admin/rotation-config/update-spin', function () {
         }, {
@@ -229,28 +229,4 @@ $(document).ready(function () {
             id: $(".item-buy-spin.active").attr("data-id")
         })
     })
-
-    function changeLanguage(lang) {
-        fetch(`../assets/json/lang_${lang}.json`)
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json();
-          })
-          .then(data => {
-              console.log(data);
-              document.querySelectorAll("[data-translate]").forEach(elt => {
-                  elt.textContent = data[elt.getAttribute("data-translate")];
-              });
-          })
-          .catch(e => {
-              console.log('There was a problem with the fetch operation: ' + e.message);
-          });
-    }
-    document.getElementById('languageSwitcher').addEventListener('change', function() {
-        console.log(this.value);
-        changeLanguage(this.value);
-    });
-    changeLanguage("en");
 });
