@@ -1,6 +1,6 @@
 {
   "Home": "Home",
-  "Daily quest": "daily quest",
+  "Daily quest": "Daily quest",
   "Grand quest": "Grand quest",
   "Spin": "Spin",
   "Do you want to buy spins": "Do you want to buy spins",
@@ -31,6 +31,7 @@
   "Do you want to come back mytelpay?": "Do you want to come back mytelpay?",
   "Notification": "Notification",
   "1 Emoney": "1 Emoney",
-  "Next spin": "Next spin"
+  "Next spin": "Next spin",
+  "spin": "spin"
 }
 

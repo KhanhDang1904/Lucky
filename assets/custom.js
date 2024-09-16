@@ -9,7 +9,7 @@ $(document).ready(function () {
     let votay = document.getElementById("votay");
     let sound = 0;
     Ajax('/admin/rotation-config', function (data) {
-
+        $(".spin").text(data.config.total_spin)
         theWheel = new Winwheel({
             'outerRadius': 220, // Bán kính ngoài
             'innerRadius': 0, // Size lỗ trung tâm
@@ -128,6 +128,7 @@ $(document).ready(function () {
         Ajax('/admin/rotation-config', function (data) {
             sound = data.config.sound
             solanquay = data.config.total_spin
+            $(".spin").text(data.config.total_spin)
             if (dem < solanquay) {
                 // Nút quay không nhấp được khi đang chạy
                 // Dựa trên mức công suất được chọn, hãy điều chỉnh số vòng quay cho bánh xe, càng nhiều lần
