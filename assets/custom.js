@@ -138,7 +138,7 @@ $(document).ready(function () {
                 // Tắt nút xoay để không thể nhấp lại trong khi bánh xe đang quay.
                 $(".nutbatdau").css("background-image", "");
                 if (random === -1) {
-                    toastr.error("Hiện trung tâm đã trao hết phần quà cho quý khách, hẹn gặp lại quý khách lần sau", {
+                    toastr.error("The center has now given all the gifts to you. See you next time", {
                         CloseButton: true,
                         ProgressBar: true
                     });

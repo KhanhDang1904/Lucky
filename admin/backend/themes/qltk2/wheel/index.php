@@ -40,7 +40,7 @@ CrudAsset::register($this);
             'tableOptions' => ['class' => 'table table-borderd table-stripped text-nowrap'],
             'panel' => [
                 'type' => 'primary',
-                'heading' => ' <span class="text-primary">Wheel list</span>'
+                'heading' => ' <span class="text-primary">Reward list</span>'
             ],
             'summary' => "Show {begin} - {end} total count {totalCount}",
 

@@ -15,7 +15,7 @@
         <li class="nav-item ">
             <a class="nav-link <?= $this->params['active_menu'] === 'wheel'?'active':''?> collapsed" href="/admin/wheel">
                 <i class="bi bi-bullseye"></i>
-                <span>Wheel</span>
+                <span>Reward</span>
             </a>
         </li>
         <li class="nav-item ">
