@@ -32,7 +32,6 @@ body{
 }
 .btn-start{
   margin-top: 24px;
-  margin-bottom: 70px;
   background:
     linear-gradient(#dc0c83 0 0) padding-box, /*this is your grey background*/
     linear-gradient(to right, #FFA7C0, #FCD0DF) border-box;
