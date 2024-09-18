@@ -93,7 +93,7 @@ use yii\helpers\StringHelper;
  *
  * For more details and usage information on Component, see the [guide article on components](guide:concept-components).
  *
- * @property-read Behavior[] $behaviors List of behaviors attached to this component.
+ * @property Behavior[] $behaviors List of behaviors attached to this component. This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -222,7 +222,7 @@ class Component extends BaseObject
      * will be implicitly called when executing `isset($component->property)`.
      * @param string $name the property name or the event name
      * @return bool whether the named property is set
-     * @see https://www.php.net/manual/en/function.isset.php
+     * @see https://secure.php.net/manual/en/function.isset.php
      */
     public function __isset($name)
     {
@@ -254,7 +254,7 @@ class Component extends BaseObject
      * will be implicitly called when executing `unset($component->property)`.
      * @param string $name the property name
      * @throws InvalidCallException if the property is read only.
-     * @see https://www.php.net/manual/en/function.unset.php
+     * @see https://secure.php.net/manual/en/function.unset.php
      */
     public function __unset($name)
     {
@@ -464,17 +464,13 @@ class Component extends BaseObject
     {
         $this->ensureBehaviors();
 
-        if (!empty($this->_events[$name])) {
-            return true;
-        }
-
         foreach ($this->_eventWildcards as $wildcard => $handlers) {
             if (!empty($handlers) && StringHelper::matchWildcard($wildcard, $name)) {
                 return true;
             }
         }
 
-        return Event::hasHandlers($this, $name);
+        return !empty($this->_events[$name]) || Event::hasHandlers($this, $name);
     }
 
     /**
@@ -571,7 +567,7 @@ class Component extends BaseObject
             }
             if ($removed) {
                 $this->_events[$name] = array_values($this->_events[$name]);
-                return true;
+                return $removed;
             }
         }
 
@@ -597,12 +593,10 @@ class Component extends BaseObject
 
     /**
      * Triggers an event.
-     *
-     * This method represents the happening of an event. It invokes all attached handlers for the event
-     * including class-level handlers.
-     *
+     * This method represents the happening of an event. It invokes
+     * all attached handlers for the event including class-level handlers.
      * @param string $name the event name
-     * @param Event|null $event the event instance. If not set, a default [[Event]] object will be created.
+     * @param Event $event the event parameter. If not set, a default [[Event]] object will be created.
      */
     public function trigger($name, Event $event = null)
     {
@@ -611,15 +605,15 @@ class Component extends BaseObject
         $eventHandlers = [];
         foreach ($this->_eventWildcards as $wildcard => $handlers) {
             if (StringHelper::matchWildcard($wildcard, $name)) {
-                $eventHandlers[] = $handlers;
+                $eventHandlers = array_merge($eventHandlers, $handlers);
             }
         }
+
         if (!empty($this->_events[$name])) {
-            $eventHandlers[] = $this->_events[$name];
+            $eventHandlers = array_merge($eventHandlers, $this->_events[$name]);
         }
 
         if (!empty($eventHandlers)) {
-            $eventHandlers = call_user_func_array('array_merge', $eventHandlers);
             if ($event === null) {
                 $event = new Event();
             }

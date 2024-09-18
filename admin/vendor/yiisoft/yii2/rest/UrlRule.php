@@ -62,7 +62,7 @@ use yii\web\UrlRuleInterface;
 class UrlRule extends CompositeUrlRule
 {
     /**
-     * @var string|null the common prefix string shared by all patterns.
+     * @var string the common prefix string shared by all patterns.
      */
     public $prefix;
     /**
@@ -158,7 +158,7 @@ class UrlRule extends CompositeUrlRule
         }
         $this->controller = $controllers;
 
-        $this->prefix = trim((string)$this->prefix, '/');
+        $this->prefix = trim($this->prefix, '/');
 
         parent::init();
     }
@@ -205,6 +205,9 @@ class UrlRule extends CompositeUrlRule
         $config['verb'] = $verbs;
         $config['pattern'] = rtrim($prefix . '/' . strtr($pattern, $this->tokens), '/');
         $config['route'] = $action;
+        if (!empty($verbs) && !in_array('GET', $verbs)) {
+            $config['mode'] = WebUrlRule::PARSING_ONLY;
+        }
         $config['suffix'] = $this->suffix;
 
         return Yii::createObject($config);
@@ -216,14 +219,6 @@ class UrlRule extends CompositeUrlRule
     public function parseRequest($manager, $request)
     {
         $pathInfo = $request->getPathInfo();
-        if (
-            $this->prefix !== ''
-            && strpos($this->prefix, '<') === false
-            && strpos($pathInfo . '/', $this->prefix . '/') !== 0
-        ) {
-            return false;
-        }
-
         foreach ($this->rules as $urlName => $rules) {
             if (strpos($pathInfo, $urlName) !== false) {
                 foreach ($rules as $rule) {

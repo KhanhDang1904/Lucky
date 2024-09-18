@@ -13,9 +13,10 @@ use yii\base\BaseObject;
  * SqlToken represents SQL tokens produced by [[SqlTokenizer]] or its child classes.
  *
  * @property SqlToken[] $children Child tokens.
- * @property-read bool $hasChildren Whether the token has children.
- * @property-read bool $isCollection Whether the token represents a collection of tokens.
- * @property-read string $sql SQL code.
+ * @property bool $hasChildren Whether the token has children. This property is read-only.
+ * @property bool $isCollection Whether the token represents a collection of tokens. This property is
+ * read-only.
+ * @property string $sql SQL code. This property is read-only.
  *
  * @author Sergey Makinen <sergey@makinen.ru>
  * @since 2.0.13
@@ -83,7 +84,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int $offset child token offset.
      * @return bool whether the token exists.
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->_children[$this->calculateOffset($offset)]);
@@ -96,7 +96,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int $offset child token offset.
      * @return SqlToken|null the child token at the specified offset, `null` if there's no token.
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $offset = $this->calculateOffset($offset);
@@ -110,7 +109,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int|null $offset child token offset.
      * @param SqlToken $token token to be added.
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $token)
     {
         $token->parent = $this;
@@ -128,7 +126,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * It is implicitly called when you use something like `unset($token[$offset])`.
      * @param int $offset child token offset.
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $offset = $this->calculateOffset($offset);
@@ -270,8 +267,10 @@ class SqlToken extends BaseObject implements \ArrayAccess
 
                 if ($firstMatchIndex === null) {
                     $firstMatchIndex = $offset;
+                    $lastMatchIndex = $offset;
+                } else {
+                    $lastMatchIndex = $offset;
                 }
-                $lastMatchIndex = $offset;
                 $wildcard = false;
                 $offset++;
                 continue 2;

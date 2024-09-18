@@ -17,8 +17,8 @@ use yii\log\Logger;
 /**
  * Debugger panel that collects and displays database queries performed.
  *
- * @property-read array $profileLogs
- * @property-read string $summaryName Short name of the panel, which will be use in summary.
+ * @property array $profileLogs Returns all profile logs of the current request for this panel. This property is read-only.
+ * @property string $summaryName Short name of the panel, which will be use in summary. This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -49,6 +49,7 @@ class DbPanel extends Panel
      * @since 2.0.7
      */
     public $defaultFilter = [];
+
     /**
      * @var array db queries info extracted to array as models, to use with data provider.
      */
@@ -58,12 +59,6 @@ class DbPanel extends Panel
      */
     private $_timings;
 
-
-    /**
-     * @var array of event names used to get profile logs.
-     * @since 2.1.17
-     */
-    public $dbEventNames = ['yii\db\Command::query', 'yii\db\Command::execute'];
 
     /**
      * {@inheritdoc}
@@ -158,12 +153,13 @@ class DbPanel extends Panel
     }
 
     /**
-     * Returns all profile logs of the current request for this panel. It includes categories specified in $this->dbEventNames property.
+     * Returns all profile logs of the current request for this panel. It includes categories such as:
+     * 'yii\db\Command::query', 'yii\db\Command::execute'.
      * @return array
      */
     public function getProfileLogs()
     {
-        return $this->getLogMessages(Logger::LEVEL_PROFILE, $this->dbEventNames);
+        return $this->getLogMessages(Logger::LEVEL_PROFILE, ['yii\db\Command::query', 'yii\db\Command::execute']);
     }
 
     /**

@@ -1,11 +1,9 @@
 <?php
 namespace Codeception;
 
-use \Codeception\PHPUnit\TestCase as a;
+use PHPUnit_Framework_Assert as a;
 
 class Verify {
-
-    public static $override = false;
 
     protected $actual = null;
     protected $description = '';
@@ -17,12 +15,11 @@ class Verify {
 
         if (!$descriptionGiven) {
             $this->actual = $description;
-            return;
+        } else {
+            $actual = func_get_args();
+            $this->actual = $actual[1];
+            $this->description = $description;
         }
-
-        $actual = func_get_args();
-        $this->actual = $actual[1];
-        $this->description = $description;
     }
 
     /**
@@ -184,14 +181,14 @@ class Verify {
         a::assertContainsOnlyInstancesOf($class, $this->actual, $this->description);
     }
 
-    public function count($expectedCount)
+    public function count($array)
     {
-        a::assertCount($expectedCount, $this->actual, $this->description);
+        a::assertCount($array, $this->actual, $this->description);
     }
 
-    public function notCount($expectedCount)
+    public function notCount($array)
     {
-        a::assertNotCount($expectedCount, $this->actual, $this->description);
+        a::assertNotCount($array, $this->actual, $this->description);
     }
 
     public function equalXMLStructure($xml, $checkAttributes = FALSE)
@@ -306,125 +303,5 @@ class Verify {
     public function equalsXmlString($xmlString)
     {
         a::assertXmlStringEqualsXmlString($xmlString, $this->actual, $this->description);
-    }
-
-    public function stringContainsString($needle)
-    {
-        a::assertStringContainsString($needle, $this->actual, $this->description);
-    }
-
-    public function stringNotContainsString($needle)
-    {
-        a::assertStringNotContainsString($needle, $this->actual, $this->description);
-    }
-
-    public function stringContainsStringIgnoringCase($needle)
-    {
-        a::assertStringContainsStringIgnoringCase($needle, $this->actual, $this->description);
-    }
-
-    public function stringNotContainsStringIgnoringCase($needle)
-    {
-        a::assertStringNotContainsStringIgnoringCase($needle, $this->actual, $this->description);
-    }
-
-    public function array()
-    {
-        a::assertIsArray($this->actual, $this->description);
-    }
-
-    public function bool()
-    {
-        a::assertIsBool($this->actual, $this->description);
-    }
-
-    public function float()
-    {
-        a::assertIsFloat($this->actual, $this->description);
-    }
-
-    public function int()
-    {
-        a::assertIsInt($this->actual, $this->description);
-    }
-
-    public function numeric()
-    {
-        a::assertIsNumeric($this->actual, $this->description);
-    }
-
-    public function object()
-    {
-        a::assertIsObject($this->actual, $this->description);
-    }
-
-    public function resource()
-    {
-        a::assertIsResource($this->actual, $this->description);
-    }
-
-    public function string()
-    {
-        a::assertIsString($this->actual, $this->description);
-    }
-
-    public function scalar()
-    {
-        a::assertIsScalar($this->actual, $this->description);
-    }
-
-    public function callable()
-    {
-        a::assertIsCallable($this->actual, $this->description);
-    }
-
-    public function notArray()
-    {
-        a::assertIsNotArray($this->actual, $this->description);
-    }
-
-    public function notBool()
-    {
-        a::assertIsNotBool($this->actual, $this->description);
-    }
-
-    public function notFloat()
-    {
-        a::assertIsNotFloat($this->actual, $this->description);
-    }
-
-    public function notInt()
-    {
-        a::assertIsNotInt($this->actual, $this->description);
-    }
-
-    public function notNumeric()
-    {
-        a::assertIsNotNumeric($this->actual, $this->description);
-    }
-
-    public function notObject()
-    {
-        a::assertIsNotObject($this->actual, $this->description);
-    }
-
-    public function notResource()
-    {
-        a::assertIsNotResource($this->actual, $this->description);
-    }
-
-    public function notString()
-    {
-        a::assertIsNotString($this->actual, $this->description);
-    }
-
-    public function notScalar()
-    {
-        a::assertIsNotScalar($this->actual, $this->description);
-    }
-
-    public function notCallable()
-    {
-        a::assertIsNotCallable($this->actual, $this->description);
     }
 }

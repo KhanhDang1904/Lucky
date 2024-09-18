@@ -7,7 +7,6 @@
 
 namespace yii\di;
 
-use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -60,32 +59,25 @@ class Instance
      * @var string the component ID, class name, interface name or alias name
      */
     public $id;
-    /**
-     * @var bool if null should be returned instead of throwing an exception
-     */
-    public $optional;
 
 
     /**
      * Constructor.
      * @param string $id the component ID
-     * @param bool $optional if null should be returned instead of throwing an exception
      */
-    protected function __construct($id, $optional = false)
+    protected function __construct($id)
     {
         $this->id = $id;
-        $this->optional = $optional;
     }
 
     /**
      * Creates a new Instance object.
      * @param string $id the component ID
-     * @param bool $optional if null should be returned instead of throwing an exception
      * @return Instance the new Instance object.
      */
-    public static function of($id, $optional = false)
+    public static function of($id)
     {
-        return new static($id, $optional);
+        return new static($id);
     }
 
     /**
@@ -102,9 +94,9 @@ class Instance
      * use yii\db\Connection;
      *
      * // returns Yii::$app->db
-     * $db = Instance::ensure('db', Connection::class);
+     * $db = Instance::ensure('db', Connection::className());
      * // returns an instance of Connection using the given configuration
-     * $db = Instance::ensure(['dsn' => 'sqlite:path/to/my.db'], Connection::class);
+     * $db = Instance::ensure(['dsn' => 'sqlite:path/to/my.db'], Connection::className());
      * ```
      *
      * @param object|string|array|static $reference an object or a reference to the desired object.
@@ -165,21 +157,14 @@ class Instance
      */
     public function get($container = null)
     {
-        try {
-            if ($container) {
-                return $container->get($this->id);
-            }
-            if (Yii::$app && Yii::$app->has($this->id)) {
-                return Yii::$app->get($this->id);
-            }
-
-            return Yii::$container->get($this->id);
-        } catch (Exception $e) {
-            if ($this->optional) {
-                return null;
-            }
-            throw $e;
+        if ($container) {
+            return $container->get($this->id);
         }
+        if (Yii::$app && Yii::$app->has($this->id)) {
+            return Yii::$app->get($this->id);
+        }
+
+        return Yii::$container->get($this->id);
     }
 
     /**
@@ -188,7 +173,7 @@ class Instance
      * @param array $state
      * @return Instance
      * @throws InvalidConfigException when $state property does not contain `id` parameter
-     * @see https://www.php.net/manual/en/function.var-export.php
+     * @see var_export()
      * @since 2.0.12
      */
     public static function __set_state($state)

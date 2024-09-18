@@ -10,6 +10,7 @@ namespace yii\web;
 use DOMDocument;
 use DOMElement;
 use DOMException;
+use DOMText;
 use yii\base\Arrayable;
 use yii\base\Component;
 use yii\helpers\StringHelper;
@@ -37,10 +38,7 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
      */
     public $encoding;
     /**
-     * @var string|string[]|false the name of the root element. If set to false, null or is empty then no root tag
-     * should be added.
-     *
-     * Since 2.0.44 URI namespace could be specified by passing `[namespace, tag name]` array.
+     * @var string the name of the root element. If set to false, null or is empty then no root tag should be added.
      */
     public $rootTag = 'response';
     /**
@@ -54,26 +52,14 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
      */
     public $useTraversableAsArray = true;
     /**
-     * @var bool if object class names should be used as tag names
+     * @var bool if object tags should be added
      * @since 2.0.11
      */
     public $useObjectTags = true;
-    /**
-     * @var bool if true, converts object tags to lowercase, `$useObjectTags` must be enabled
-     * @since 2.0.43
-     */
-    public $objectTagToLowercase = false;
-
-    /**
-     * @var DOMDocument the XML document, serves as the root of the document tree
-     * @since 2.0.43
-     */
-    protected $dom;
 
 
     /**
      * Formats the specified response.
-     *
      * @param Response $response the response to be formatted.
      */
     public function format($response)
@@ -84,27 +70,21 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
         }
         $response->getHeaders()->set('Content-Type', $this->contentType);
         if ($response->data !== null) {
-            $this->dom = new DOMDocument($this->version, $charset);
+            $dom = new DOMDocument($this->version, $charset);
             if (!empty($this->rootTag)) {
-                if (is_array($this->rootTag)) {
-                    $root = $this->dom->createElementNS($this->rootTag[0], $this->rootTag[1]);
-                } else {
-                    $root = $this->dom->createElement($this->rootTag);
-                }
-                $this->dom->appendChild($root);
+                $root = new DOMElement($this->rootTag);
+                $dom->appendChild($root);
                 $this->buildXml($root, $response->data);
             } else {
-                $this->buildXml($this->dom, $response->data);
+                $this->buildXml($dom, $response->data);
             }
-            $response->content = $this->dom->saveXML();
+            $response->content = $dom->saveXML();
         }
     }
 
     /**
-     * Recursively adds data to XML document.
-     *
-     * @param DOMElement|DOMDocument $element current element
-     * @param mixed $data content of the current element
+     * @param DOMElement $element
+     * @param mixed $data
      */
     protected function buildXml($element, $data)
     {
@@ -115,22 +95,18 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
                 if (is_int($name) && is_object($value)) {
                     $this->buildXml($element, $value);
                 } elseif (is_array($value) || is_object($value)) {
-                    $child = $this->dom->createElement($this->getValidXmlElementName($name));
+                    $child = new DOMElement($this->getValidXmlElementName($name));
                     $element->appendChild($child);
                     $this->buildXml($child, $value);
                 } else {
-                    $child = $this->dom->createElement($this->getValidXmlElementName($name));
-                    $child->appendChild($this->dom->createTextNode($this->formatScalarValue($value)));
+                    $child = new DOMElement($this->getValidXmlElementName($name));
                     $element->appendChild($child);
+                    $child->appendChild(new DOMText($this->formatScalarValue($value)));
                 }
             }
         } elseif (is_object($data)) {
             if ($this->useObjectTags) {
-                $name = StringHelper::basename(get_class($data));
-                if ($this->objectTagToLowercase) {
-                    $name = strtolower($name);
-                }
-                $child = $this->dom->createElement($name);
+                $child = new DOMElement(StringHelper::basename(get_class($data)));
                 $element->appendChild($child);
             } else {
                 $child = $element;
@@ -145,7 +121,7 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
                 $this->buildXml($child, $array);
             }
         } else {
-            $element->appendChild($this->dom->createTextNode($this->formatScalarValue($data)));
+            $element->appendChild(new DOMText($this->formatScalarValue($data)));
         }
     }
 
@@ -176,7 +152,7 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
      *
      * Falls back to [[itemTag]] otherwise.
      *
-     * @param mixed $name the original name
+     * @param mixed $name
      * @return string
      * @since 2.0.12
      */
@@ -192,7 +168,7 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
     /**
      * Checks if name is valid to be used in XML.
      *
-     * @param mixed $name the name to test
+     * @param mixed $name
      * @return bool
      * @see http://stackoverflow.com/questions/2519845/how-to-check-if-string-is-a-valid-xml-element-name/2519943#2519943
      * @since 2.0.12
@@ -200,7 +176,8 @@ class XmlResponseFormatter extends Component implements ResponseFormatterInterfa
     protected function isValidXmlName($name)
     {
         try {
-            return $this->dom->createElement($name) !== false;
+            new DOMElement($name);
+            return true;
         } catch (DOMException $e) {
             return false;
         }

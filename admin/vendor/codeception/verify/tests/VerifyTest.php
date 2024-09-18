@@ -1,12 +1,13 @@
 <?php
 
-include_once __DIR__.'/../src/Codeception/function.php';
+include __DIR__.'/../src/Codeception/function.php';
+include __DIR__.'/../vendor/autoload.php';
 
-class VerifyTest extends \Codeception\PHPUnit\TestCase {
+class VerifyTest extends PHPUnit_Framework_TestCase {
 
     protected $xml;
 
-    protected function _setUp()
+    protected function setUp()
     {
         $this->xml = new DomDocument;
         $this->xml->loadXML('<foo><bar>Baz</bar><bar>Baz</bar></foo>');
@@ -217,78 +218,6 @@ class VerifyTest extends \Codeception\PHPUnit\TestCase {
     {
         expect('<foo><bar>Baz</bar><bar>Baz</bar></foo>')
             ->equalsXmlString('<foo><bar>Baz</bar><bar>Baz</bar></foo>');
-    }
-
-    public function testStringContainsString()
-    {
-        verify('foo bar')->stringContainsString('o b');
-        verify('foo bar')->stringNotContainsString('BAR');
-    }
-
-    public function testStringContainsStringIgnoringCase()
-    {
-        verify('foo bar')->stringContainsStringIgnoringCase('O b');
-        verify('foo bar')->stringNotContainsStringIgnoringCase('baz');
-    }
-
-    public function testIsString()
-    {
-        verify('foo bar')->string();
-        verify(false)->notString();
-    }
-
-    public function testIsArray()
-    {
-        verify([1,2,3])->array();
-        verify(false)->notArray();
-    }
-
-    public function testIsBool()
-    {
-        verify(false)->bool();
-        verify([1,2,3])->notBool();
-    }
-
-    public function testIsFloat()
-    {
-        verify(1.5)->float();
-        verify(1)->notFloat();
-    }
-
-    public function testIsInt()
-    {
-        verify(5)->int();
-        verify(1.5)->notInt();
-    }
-
-    public function testIsNumeric()
-    {
-        verify('1.5')->numeric();
-        verify('foo bar')->notNumeric();
-    }
-
-    public function testIsObject()
-    {
-        verify(new stdClass)->object();
-        verify(false)->notObject();
-    }
-
-    public function testIsResource()
-    {
-        verify(fopen(__FILE__, 'r'))->resource();
-        verify(false)->notResource();
-    }
-
-    public function testIsScalar()
-    {
-        verify('foo bar')->scalar();
-        verify([1,2,3])->notScalar();
-    }
-
-    public function testIsCallable()
-    {
-        verify(function() {})->callable();
-        verify(false)->notCallable();
     }
 }
 

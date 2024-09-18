@@ -9,9 +9,7 @@ namespace yii\debug\panels;
 
 use Yii;
 use yii\base\InlineAction;
-use yii\debug\models\router\ActionRoutes;
-use yii\debug\models\router\CurrentRoute;
-use yii\debug\models\router\RouterRules;
+use yii\debug\models\Router;
 use yii\debug\Panel;
 use yii\log\Logger;
 
@@ -78,11 +76,7 @@ class RouterPanel extends Panel
      */
     public function getDetail()
     {
-        return Yii::$app->view->render('panels/router/detail', [
-            'currentRoute' => new CurrentRoute($this->data),
-            'routerRules' => new RouterRules(),
-            'actionRoutes' => new ActionRoutes(),
-        ]);
+        return Yii::$app->view->render('panels/router/detail', ['model' => new Router($this->data)]);
     }
 
     /**
@@ -101,8 +95,8 @@ class RouterPanel extends Panel
         }
         return [
             'messages' => $this->getLogMessages(Logger::LEVEL_TRACE, $this->_categories),
-            'route' => Yii::$app->requestedAction ? Yii::$app->requestedAction->getUniqueId() : Yii::$app->requestedRoute,
-            'action' => $action,
+            'route'    => Yii::$app->requestedAction ? Yii::$app->requestedAction->getUniqueId() : Yii::$app->requestedRoute,
+            'action'   => $action,
         ];
     }
 }

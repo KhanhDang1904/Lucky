@@ -3,13 +3,12 @@
 /**
  * @package   yii2-krajee-base
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2022
- * @version   3.0.4
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
+ * @version   2.0.5
  */
 
 namespace kartik\base;
 
-use ReflectionException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\FormatConverter;
@@ -39,7 +38,6 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
 {
     use TranslationTrait;
     use WidgetTrait;
-    use BootstrapTrait;
 
     /**
      * @var string the HTML markup for widget loading indicator
@@ -100,7 +98,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
     /**
      * @inheritdoc
      * @throws InvalidConfigException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function init()
     {
@@ -113,7 +111,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
 
     /**
      * Initializes the input widget.
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     protected function initInputWidget()
     {
@@ -171,6 +169,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
      * @param string $assetPath the path to the assets
      * @param string $filePath the path to the JS file with the file name prefix
      * @param string $suffix the file name suffix - defaults to '.js'
+     * @throws \ReflectionException
      */
     protected function setLanguage($prefix, $assetPath = null, $filePath = null, $suffix = '.js')
     {
@@ -178,12 +177,12 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
         $s = DIRECTORY_SEPARATOR;
         if ($assetPath === null) {
             $assetPath = "{$pwd}{$s}assets{$s}";
-        } elseif (Lib::substr($assetPath, -1) != $s) {
+        } elseif (substr($assetPath, -1) != $s) {
             $assetPath .= $s;
         }
         if ($filePath === null) {
             $filePath = "js{$s}locales{$s}";
-        } elseif (Lib::substr($filePath, -1) != $s) {
+        } elseif (substr($filePath, -1) != $s) {
             $filePath .= $s;
         }
         $full = $filePath . $prefix . $this->language . $suffix;
@@ -201,7 +200,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
         } else {
             $this->_langFile = '';
         }
-        $this->_langFile = Lib::str_replace($s, '/', $this->_langFile);
+        $this->_langFile = str_replace($s, '/', $this->_langFile);
     }
 
     /**
@@ -225,7 +224,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
         if ($type == 'radio' || $type == 'checkbox') {
             $checked = ArrayHelper::remove($this->options, 'checked', '');
             if (empty($checked) && !empty($this->value)) {
-                $checked = !(($this->value == 0));
+                $checked = ($this->value == 0) ? false : true;
             } elseif (empty($checked)) {
                 $checked = false;
             }
@@ -249,7 +248,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
      */
     protected static function convertDateFormat($format)
     {
-        return Lib::strtr($format, [
+        return strtr($format, [
             // meridian lowercase
             'a' => 'p',
             // meridian uppercase
@@ -302,7 +301,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
         }
         if (isset($this->pluginOptions['format'])) {
             $format = $this->pluginOptions['format'];
-            $format = Lib::strncmp($format, 'php:', 4) === 0 ? Lib::substr($format, 4) :
+            $format = strncmp($format, 'php:', 4) === 0 ? substr($format, 4) :
                 FormatConverter::convertDateIcuToPhp($format, $type);
             $this->pluginOptions['format'] = static::convertDateFormat($format);
             return;
@@ -312,7 +311,7 @@ class InputWidget extends YiiInputWidget implements BootstrapInterface
         if (empty($format)) {
             throw new InvalidConfigException("Error parsing '{$type}' format.");
         }
-        $format = Lib::strncmp($format, 'php:', 4) === 0 ? Lib::substr($format, 4) :
+        $format = strncmp($format, 'php:', 4) === 0 ? substr($format, 4) :
             FormatConverter::convertDateIcuToPhp($format, $type);
         $this->pluginOptions['format'] = static::convertDateFormat($format);
     }

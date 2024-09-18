@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of phpDocumentor.
@@ -8,23 +6,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @copyright 2010-2018 Mike van Riel<mike@phpdoc.org>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
 
 namespace phpDocumentor\Reflection\DocBlock;
 
 use phpDocumentor\Reflection\DocBlock\Tags\Example;
-
-use function array_slice;
-use function file;
-use function getcwd;
-use function implode;
-use function is_readable;
-use function rtrim;
-use function sprintf;
-use function trim;
-
-use const DIRECTORY_SEPARATOR;
 
 /**
  * Class used to find an example file's location based on a given ExampleDescriptor.
@@ -46,7 +35,7 @@ class ExampleFinder
 
         $file = $this->getExampleFileContents($filename);
         if (!$file) {
-            return sprintf('** File not found : %s **', $filename);
+            return "** File not found : {$filename} **";
         }
 
         return implode('', array_slice($file, $example->getStartingLine() - 1, $example->getLineCount()));
@@ -83,7 +72,7 @@ class ExampleFinder
      *
      * @return string[]
      */
-    public function getExampleDirectories(): array
+    public function getExampleDirectories()
     {
         return $this->exampleDirectories;
     }
@@ -98,10 +87,8 @@ class ExampleFinder
      * 2. Checks the source folder for the given filename
      * 3. Checks the 'examples' folder in the current working directory for examples
      * 4. Checks the path relative to the current working directory for the given filename
-     *
-     * @return string[] all lines of the example file
      */
-    private function getExampleFileContents(string $filename): ?array
+    private function getExampleFileContents(string $filename): ?string
     {
         $normalizedPath = null;
 
@@ -123,9 +110,7 @@ class ExampleFinder
             }
         }
 
-        $lines = $normalizedPath && is_readable($normalizedPath) ? file($normalizedPath) : false;
-
-        return $lines !== false ? $lines : null;
+        return $normalizedPath && is_readable($normalizedPath) ? file($normalizedPath) : null;
     }
 
     /**

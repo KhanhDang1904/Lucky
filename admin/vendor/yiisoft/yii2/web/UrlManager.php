@@ -11,7 +11,6 @@ use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\caching\CacheInterface;
-use yii\di\Instance;
 use yii\helpers\Url;
 
 /**
@@ -119,14 +118,12 @@ class UrlManager extends Component
      */
     public $routeParam = 'r';
     /**
-     * @var CacheInterface|array|string|bool the cache object or the application component ID of the cache object.
-     * This can also be an array that is used to create a [[CacheInterface]] instance in case you do not want to use
-     * an application component.
+     * @var CacheInterface|string the cache object or the application component ID of the cache object.
      * Compiled URL rules will be cached through this cache object, if it is available.
      *
      * After the UrlManager object is created, if you want to change this property,
      * you should only assign it with a cache object.
-     * Set this property to `false` or `null` if you do not want to cache the URL rules.
+     * Set this property to `false` if you do not want to cache the URL rules.
      *
      * Cache entries are stored for the time set by [[\yii\caching\Cache::$defaultDuration|$defaultDuration]] in
      * the cache configuration, which is unlimited by default. You may want to tune this value if your [[rules]]
@@ -185,10 +182,13 @@ class UrlManager extends Component
         if (!$this->enablePrettyUrl) {
             return;
         }
-
-        if (!empty($this->rules)) {
-            $this->rules = $this->buildRules($this->rules);
+        if (is_string($this->cache)) {
+            $this->cache = Yii::$app->get($this->cache, false);
         }
+        if (empty($this->rules)) {
+            return;
+        }
+        $this->rules = $this->buildRules($this->rules);
     }
 
     /**
@@ -238,6 +238,10 @@ class UrlManager extends Component
                 $rule = ['route' => $rule];
                 if (preg_match("/^((?:($verbs),)*($verbs))\\s+(.*)$/", $key, $matches)) {
                     $rule['verb'] = explode(',', $matches[1]);
+                    // rules that are not applicable for GET requests should not be used to create URLs
+                    if (!in_array('GET', $rule['verb'], true)) {
+                        $rule['mode'] = UrlRule::PARSING_ONLY;
+                    }
                     $key = $matches[4];
                 }
                 $rule['pattern'] = $key;
@@ -257,23 +261,6 @@ class UrlManager extends Component
     }
 
     /**
-     * @return CacheInterface|null|bool
-     */
-    private function ensureCache()
-    {
-        if (!$this->cache instanceof CacheInterface && $this->cache !== false && $this->cache !== null) {
-            try {
-                $this->cache = Instance::ensure($this->cache, 'yii\caching\CacheInterface');
-            } catch (InvalidConfigException $e) {
-                Yii::warning('Unable to use cache for URL manager: ' . $e->getMessage());
-                $this->cache = null;
-            }
-        }
-
-        return $this->cache;
-    }
-
-    /**
      * Stores $builtRules to cache, using $rulesDeclaration as a part of cache key.
      *
      * @param array $ruleDeclarations the rule declarations. Each array element represents a single rule declaration.
@@ -284,12 +271,11 @@ class UrlManager extends Component
      */
     protected function setBuiltRulesCache($ruleDeclarations, $builtRules)
     {
-        $cache = $this->ensureCache();
-        if (!$cache) {
+        if (!$this->cache instanceof CacheInterface) {
             return false;
         }
 
-        return $cache->set([$this->cacheKey, $this->ruleConfig, $ruleDeclarations], $builtRules);
+        return $this->cache->set([$this->cacheKey, $this->ruleConfig, $ruleDeclarations], $builtRules);
     }
 
     /**
@@ -303,12 +289,11 @@ class UrlManager extends Component
      */
     protected function getBuiltRulesFromCache($ruleDeclarations)
     {
-        $cache = $this->ensureCache();
-        if (!$cache) {
+        if (!$this->cache instanceof CacheInterface) {
             return false;
         }
 
-        return $cache->get([$this->cacheKey, $this->ruleConfig, $ruleDeclarations]);
+        return $this->cache->get([$this->cacheKey, $this->ruleConfig, $ruleDeclarations]);
     }
 
     /**

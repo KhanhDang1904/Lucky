@@ -8,7 +8,6 @@
 namespace yii\test;
 
 use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
 use yii\db\TableSchema;
 
 /**
@@ -25,8 +24,8 @@ use yii\db\TableSchema;
  *
  * For more details and usage information on ActiveFixture, see the [guide article on fixtures](guide:test-fixtures).
  *
- * @property-read TableSchema $tableSchema The schema information of the database table associated with this
- * fixture.
+ * @property TableSchema $tableSchema The schema information of the database table associated with this
+ * fixture. This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -59,13 +58,8 @@ class ActiveFixture extends BaseActiveFixture
     public function init()
     {
         parent::init();
-        if ($this->tableName === null) {
-            if ($this->modelClass === null) {
-                throw new InvalidConfigException('Either "modelClass" or "tableName" must be set.');
-            }
-            /** @var ActiveRecord $modelClass */
-            $modelClass = $this->modelClass;
-            $this->db = $modelClass::getDb();
+        if ($this->modelClass === null && $this->tableName === null) {
+            throw new InvalidConfigException('Either "modelClass" or "tableName" must be set.');
         }
     }
 

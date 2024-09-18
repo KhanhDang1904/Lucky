@@ -11,7 +11,6 @@ use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidValueException;
-use yii\di\Instance;
 use yii\rbac\CheckAccessInterface;
 
 /**
@@ -47,10 +46,11 @@ use yii\rbac\CheckAccessInterface;
  * ]
  * ```
  *
- * @property-read string|int $id The unique identifier for the user. If `null`, it means the user is a guest.
+ * @property string|int $id The unique identifier for the user. If `null`, it means the user is a guest. This
+ * property is read-only.
  * @property IdentityInterface|null $identity The identity object associated with the currently logged-in
  * user. `null` is returned if the user is not logged in (not authenticated).
- * @property-read bool $isGuest Whether the current user is a guest.
+ * @property bool $isGuest Whether the current user is a guest. This property is read-only.
  * @property string $returnUrl The URL that the user should be redirected to after login. Note that the type
  * of this property differs in getter and setter. See [[getReturnUrl()]] and [[setReturnUrl()]] for details.
  *
@@ -98,15 +98,14 @@ class User extends Component
      */
     public $identityCookie = ['name' => '_identity', 'httpOnly' => true];
     /**
-     * @var int the number of seconds in which the user will be logged out automatically if the user
+     * @var int the number of seconds in which the user will be logged out automatically if he
      * remains inactive. If this property is not set, the user will be logged out after
      * the current session expires (c.f. [[Session::timeout]]).
      * Note that this will not work if [[enableAutoLogin]] is `true`.
      */
     public $authTimeout;
     /**
-     * @var CheckAccessInterface|string|array The access checker object to use for checking access or the application
-     * component ID of the access checker.
+     * @var CheckAccessInterface The access checker to use for checking access.
      * If not set the application auth manager will be used.
      * @since 2.0.9
      */
@@ -130,11 +129,6 @@ class User extends Component
      * @var string the session variable name used to store the value of [[id]].
      */
     public $idParam = '__id';
-    /**
-     * @var string the session variable name used to store authentication key.
-     * @since 2.0.41
-     */
-    public $authKeyParam = '__authKey';
     /**
      * @var string the session variable name used to store the value of expiration timestamp of the authenticated state.
      * This is used when [[authTimeout]] is set.
@@ -171,8 +165,8 @@ class User extends Component
         if ($this->enableAutoLogin && !isset($this->identityCookie['name'])) {
             throw new InvalidConfigException('User::identityCookie must contain the "name" element.');
         }
-        if ($this->accessChecker !== null) {
-            $this->accessChecker = Instance::ensure($this->accessChecker, '\yii\rbac\CheckAccessInterface');
+        if (!empty($this->accessChecker) && is_string($this->accessChecker)) {
+            $this->accessChecker = Yii::createObject($this->accessChecker);
         }
     }
 
@@ -603,8 +597,7 @@ class User extends Component
                 if (!$identity instanceof IdentityInterface) {
                     throw new InvalidValueException("$class::findIdentity() must return an object implementing IdentityInterface.");
                 } elseif (!$identity->validateAuthKey($authKey)) {
-                    $ip = Yii::$app->getRequest()->getUserIP();
-                    Yii::warning("Invalid cookie auth key attempted for user '$id' from $ip: $authKey", __METHOD__);
+                    Yii::warning("Invalid auth key attempted for user '$id': $authKey", __METHOD__);
                 } else {
                     return ['identity' => $identity, 'duration' => $duration];
                 }
@@ -654,14 +647,14 @@ class User extends Component
         }
 
         $session = Yii::$app->getSession();
-        $session->regenerateID(true);
+        if (!YII_ENV_TEST) {
+            $session->regenerateID(true);
+        }
         $session->remove($this->idParam);
         $session->remove($this->authTimeoutParam);
-        $session->remove($this->authKeyParam);
 
         if ($identity) {
             $session->set($this->idParam, $identity->getId());
-            $session->set($this->authKeyParam, $identity->getAuthKey());
             if ($this->authTimeout !== null) {
                 $session->set($this->authTimeoutParam, time() + $this->authTimeout);
             }
@@ -695,18 +688,6 @@ class User extends Component
             /* @var $class IdentityInterface */
             $class = $this->identityClass;
             $identity = $class::findIdentity($id);
-            if ($identity === null) {
-                $this->switchIdentity(null);
-            }
-        }
-
-        if ($identity !== null) {
-            $authKey = $session->get($this->authKeyParam);
-            if ($authKey !== null && !$identity->validateAuthKey($authKey)) {
-                $identity = null;
-                $ip = Yii::$app->getRequest()->getUserIP();
-                Yii::warning("Invalid session auth key attempted for user '$id' from $ip: $authKey", __METHOD__);
-            }
         }
 
         $this->setIdentity($identity);
@@ -771,10 +752,10 @@ class User extends Component
      * @see acceptableRedirectTypes
      * @since 2.0.8
      */
-    public function checkRedirectAcceptable()
+    protected function checkRedirectAcceptable()
     {
         $acceptableTypes = Yii::$app->getRequest()->getAcceptableContentTypes();
-        if (empty($acceptableTypes) || (count($acceptableTypes) === 1 && array_keys($acceptableTypes)[0] === '*/*')) {
+        if (empty($acceptableTypes) || count($acceptableTypes) === 1 && array_keys($acceptableTypes)[0] === '*/*') {
             return true;
         }
 

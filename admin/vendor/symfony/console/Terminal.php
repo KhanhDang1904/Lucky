@@ -57,16 +57,13 @@ class Terminal
 
     /**
      * @internal
+     *
+     * @return bool
      */
-    public static function hasSttyAvailable(): bool
+    public static function hasSttyAvailable()
     {
         if (null !== self::$stty) {
             return self::$stty;
-        }
-
-        // skip check if exec function is disabled
-        if (!\function_exists('exec')) {
-            return false;
         }
 
         exec('stty 2>&1', $output, $exitcode);

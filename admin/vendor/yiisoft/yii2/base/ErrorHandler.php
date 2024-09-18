@@ -41,12 +41,6 @@ abstract class ErrorHandler extends Component
      * @var \Exception|null the exception that is being handled currently.
      */
     public $exception;
-    /**
-     * @var bool if true - `handleException()` will finish script with `ExitCode::OK`.
-     * false - `ExitCode::UNSPECIFIED_ERROR`.
-     * @since 2.0.36
-     */
-    public $silentExitOnException;
 
     /**
      * @var string Used to reserve memory for fatal error handler.
@@ -56,51 +50,33 @@ abstract class ErrorHandler extends Component
      * @var \Exception from HHVM error that stores backtrace
      */
     private $_hhvmException;
-    /**
-     * @var bool whether this instance has been registered using `register()`
-     */
-    private $_registered = false;
 
-
-    public function init()
-    {
-        $this->silentExitOnException = $this->silentExitOnException !== null ? $this->silentExitOnException : YII_ENV_TEST;
-        parent::init();
-    }
 
     /**
      * Register this error handler.
-     * @since 2.0.32 this will not do anything if the error handler was already registered
      */
     public function register()
     {
-        if (!$this->_registered) {
-            ini_set('display_errors', false);
-            set_exception_handler([$this, 'handleException']);
-            if (defined('HHVM_VERSION')) {
-                set_error_handler([$this, 'handleHhvmError']);
-            } else {
-                set_error_handler([$this, 'handleError']);
-            }
-            if ($this->memoryReserveSize > 0) {
-                $this->_memoryReserve = str_repeat('x', $this->memoryReserveSize);
-            }
-            register_shutdown_function([$this, 'handleFatalError']);
-            $this->_registered = true;
+        ini_set('display_errors', false);
+        set_exception_handler([$this, 'handleException']);
+        if (defined('HHVM_VERSION')) {
+            set_error_handler([$this, 'handleHhvmError']);
+        } else {
+            set_error_handler([$this, 'handleError']);
         }
+        if ($this->memoryReserveSize > 0) {
+            $this->_memoryReserve = str_repeat('x', $this->memoryReserveSize);
+        }
+        register_shutdown_function([$this, 'handleFatalError']);
     }
 
     /**
      * Unregisters this error handler by restoring the PHP error and exception handlers.
-     * @since 2.0.32 this will not do anything if the error handler was not registered
      */
     public function unregister()
     {
-        if ($this->_registered) {
-            restore_error_handler();
-            restore_exception_handler();
-            $this->_registered = false;
-        }
+        restore_error_handler();
+        restore_exception_handler();
     }
 
     /**
@@ -133,7 +109,7 @@ abstract class ErrorHandler extends Component
                 $this->clearOutput();
             }
             $this->renderException($exception);
-            if (!$this->silentExitOnException) {
+            if (!YII_ENV_TEST) {
                 \Yii::getLogger()->flush(true);
                 if (defined('HHVM_VERSION')) {
                     flush();
@@ -169,10 +145,10 @@ abstract class ErrorHandler extends Component
             } else {
                 echo '<pre>' . htmlspecialchars($msg, ENT_QUOTES, Yii::$app->charset) . '</pre>';
             }
-            $msg .= "\n\$_SERVER = " . VarDumper::export($_SERVER);
         } else {
             echo 'An internal server error occurred.';
         }
+        $msg .= "\n\$_SERVER = " . VarDumper::export($_SERVER);
         error_log($msg);
         if (defined('HHVM_VERSION')) {
             flush();
@@ -298,7 +274,7 @@ abstract class ErrorHandler extends Component
 
     /**
      * Renders the exception.
-     * @param \Exception|\Error|\Throwable $exception the exception to be rendered.
+     * @param \Exception $exception the exception to be rendered.
      */
     abstract protected function renderException($exception);
 
@@ -336,7 +312,7 @@ abstract class ErrorHandler extends Component
      *
      * This method can be used to convert exceptions inside of methods like `__toString()`
      * to PHP errors because exceptions cannot be thrown inside of them.
-     * @param \Exception|\Throwable $exception the exception to convert to a PHP error.
+     * @param \Exception $exception the exception to convert to a PHP error.
      */
     public static function convertExceptionToError($exception)
     {
@@ -345,7 +321,7 @@ abstract class ErrorHandler extends Component
 
     /**
      * Converts an exception into a simple string.
-     * @param \Exception|\Error|\Throwable $exception the exception being converted
+     * @param \Exception|\Error $exception the exception being converted
      * @return string the string representation of the exception.
      */
     public static function convertExceptionToString($exception)
@@ -363,7 +339,7 @@ abstract class ErrorHandler extends Component
 
     /**
      * Converts an exception into a string that has verbose information about the exception and its trace.
-     * @param \Exception|\Error|\Throwable $exception the exception being converted
+     * @param \Exception|\Error $exception the exception being converted
      * @return string the string representation of the exception.
      *
      * @since 2.0.14

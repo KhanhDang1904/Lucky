@@ -1,17 +1,10 @@
 Yii Framework 2 composer extension Change Log
 =============================================
 
-2.0.10 June 24, 2020
---------------------
+2.0.9 under development
+-----------------------
 
-- Enh #31: Add Composer 2 parallel unzip compatibility (samdark)
-
-
-2.0.9 April 20, 2020
---------------------
-
-- Bug #30: Fix PHP error when upgrading/downgrading a Yii2 extension (brandonkelly)
-- Enh #27: Support for Composer 2 (brandonkelly, cebe)
+- no changes in this release.
 
 
 2.0.8 July 16, 2019

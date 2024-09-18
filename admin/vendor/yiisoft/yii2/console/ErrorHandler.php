@@ -29,7 +29,6 @@ class ErrorHandler extends \yii\base\ErrorHandler
      */
     protected function renderException($exception)
     {
-        $previous = $exception->getPrevious();
         if ($exception instanceof UnknownCommandException) {
             // display message and suggest alternatives in case of unknown command
             $message = $this->formatMessage($exception->getName() . ': ') . $exception->command;
@@ -39,7 +38,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
             } elseif (count($alternatives) > 1) {
                 $message .= "\n\nDid you mean one of these?\n    - " . implode("\n    - ", $alternatives);
             }
-        } elseif ($exception instanceof UserException && ($exception instanceof Exception || !YII_DEBUG)) {
+        } elseif ($exception instanceof Exception && ($exception instanceof UserException || !YII_DEBUG)) {
             $message = $this->formatMessage($exception->getName() . ': ') . $exception->getMessage();
         } elseif (YII_DEBUG) {
             if ($exception instanceof Exception) {
@@ -56,9 +55,7 @@ class ErrorHandler extends \yii\base\ErrorHandler
             if ($exception instanceof \yii\db\Exception && !empty($exception->errorInfo)) {
                 $message .= "\n" . $this->formatMessage("Error Info:\n", [Console::BOLD]) . print_r($exception->errorInfo, true);
             }
-            if ($previous === null) {
-                $message .= "\n" . $this->formatMessage("Stack trace:\n", [Console::BOLD]) . $exception->getTraceAsString();
-            }
+            $message .= "\n" . $this->formatMessage("Stack trace:\n", [Console::BOLD]) . $exception->getTraceAsString();
         } else {
             $message = $this->formatMessage('Error: ') . $exception->getMessage();
         }
@@ -67,15 +64,6 @@ class ErrorHandler extends \yii\base\ErrorHandler
             Console::stderr($message . "\n");
         } else {
             echo $message . "\n";
-        }
-        if (YII_DEBUG && $previous !== null) {
-            $causedBy = $this->formatMessage('Caused by: ', [Console::BOLD]);
-            if (PHP_SAPI === 'cli') {
-                Console::stderr($causedBy);
-            } else {
-                echo $causedBy;
-            }
-            $this->renderException($previous);
         }
     }
 

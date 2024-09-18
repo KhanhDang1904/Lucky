@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of phpDocumentor.
@@ -8,19 +6,20 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @copyright 2010-2018 Mike van Riel<mike@phpdoc.org>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
 
 namespace phpDocumentor\Reflection;
 
 use phpDocumentor\Reflection\DocBlock\Tag;
-use phpDocumentor\Reflection\DocBlock\Tags\TagWithType;
 use Webmozart\Assert\Assert;
 
 final class DocBlock
 {
     /** @var string The opening line for this docblock. */
-    private $summary;
+    private $summary = '';
 
     /** @var DocBlock\Description The actual description for this docblock. */
     private $description;
@@ -35,15 +34,15 @@ final class DocBlock
     private $location;
 
     /** @var bool Is this DocBlock (the start of) a template? */
-    private $isTemplateStart;
+    private $isTemplateStart = false;
 
     /** @var bool Does this DocBlock signify the end of a DocBlock template? */
-    private $isTemplateEnd;
+    private $isTemplateEnd = false;
 
     /**
      * @param DocBlock\Tag[] $tags
-     * @param Types\Context  $context  The context in which the DocBlock occurs.
-     * @param Location       $location The location within the file that this DocBlock occurs in.
+     * @param Types\Context $context The context in which the DocBlock occurs.
+     * @param Location $location The location within the file that this DocBlock occurs in.
      */
     public function __construct(
         string $summary = '',
@@ -56,16 +55,16 @@ final class DocBlock
     ) {
         Assert::allIsInstanceOf($tags, Tag::class);
 
-        $this->summary     = $summary;
+        $this->summary = $summary;
         $this->description = $description ?: new DocBlock\Description('');
         foreach ($tags as $tag) {
             $this->addTag($tag);
         }
 
-        $this->context  = $context;
+        $this->context = $context;
         $this->location = $location;
 
-        $this->isTemplateEnd   = $isTemplateEnd;
+        $this->isTemplateEnd = $isTemplateEnd;
         $this->isTemplateStart = $isTemplateStart;
     }
 
@@ -151,31 +150,9 @@ final class DocBlock
     {
         $result = [];
 
+        /** @var Tag $tag */
         foreach ($this->getTags() as $tag) {
             if ($tag->getName() !== $name) {
-                continue;
-            }
-
-            $result[] = $tag;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns an array of tags with type matching the given name. If no tags are found
-     * an empty array is returned.
-     *
-     * @param string $name String to search by.
-     *
-     * @return TagWithType[]
-     */
-    public function getTagsWithTypeByName(string $name): array
-    {
-        $result = [];
-
-        foreach ($this->getTagsByName($name) as $tag) {
-            if (!$tag instanceof TagWithType) {
                 continue;
             }
 
@@ -192,6 +169,7 @@ final class DocBlock
      */
     public function hasTag(string $name): bool
     {
+        /** @var Tag $tag */
         foreach ($this->getTags() as $tag) {
             if ($tag->getName() === $name) {
                 return true;

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of phpDocumentor.
@@ -8,6 +6,8 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @copyright 2010-2018 Mike van Riel<mike@phpdoc.org>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
 
@@ -18,14 +18,11 @@ use phpDocumentor\Reflection\DocBlock\DescriptionFactory;
 use phpDocumentor\Reflection\Types\Context as TypeContext;
 use Webmozart\Assert\Assert;
 
-use function preg_match;
-
 /**
  * Reflection class for a {@}deprecated tag in a Docblock.
  */
 final class Deprecated extends BaseTag implements Factory\StaticMethod
 {
-    /** @var string */
     protected $name = 'deprecated';
 
     /**
@@ -44,14 +41,14 @@ final class Deprecated extends BaseTag implements Factory\StaticMethod
         [^\s\:]+\:\s*\$[^\$]+\$
     )';
 
-    /** @var string|null The version vector. */
-    private $version;
+    /** @var string The version vector. */
+    private $version = '';
 
-    public function __construct(?string $version = null, ?Description $description = null)
+    public function __construct($version = null, ?Description $description = null)
     {
-        Assert::nullOrNotEmpty($version);
+        Assert::nullOrStringNotEmpty($version);
 
-        $this->version     = $version;
+        $this->version = $version;
         $this->description = $description;
     }
 
@@ -71,11 +68,9 @@ final class Deprecated extends BaseTag implements Factory\StaticMethod
         if (!preg_match('/^(' . self::REGEX_VECTOR . ')\s*(.+)?$/sux', $body, $matches)) {
             return new static(
                 null,
-                $descriptionFactory !== null ? $descriptionFactory->create($body, $context) : null
+                null !== $descriptionFactory ? $descriptionFactory->create($body, $context) : null
             );
         }
-
-        Assert::notNull($descriptionFactory);
 
         return new static(
             $matches[1],
@@ -96,14 +91,6 @@ final class Deprecated extends BaseTag implements Factory\StaticMethod
      */
     public function __toString(): string
     {
-        if ($this->description) {
-            $description = $this->description->render();
-        } else {
-            $description = '';
-        }
-
-        $version = (string) $this->version;
-
-        return $version . ($description !== '' ? ($version !== '' ? ' ' : '') . $description : '');
+        return $this->version . ($this->description ? ' ' . $this->description->render() : '');
     }
 }

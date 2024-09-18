@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of phpDocumentor.
@@ -8,25 +6,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @copyright 2010-2018 Mike van Riel<mike@phpdoc.org>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
 
 namespace phpDocumentor\Reflection\DocBlock;
 
 use phpDocumentor\Reflection\Types\Context as TypeContext;
-use phpDocumentor\Reflection\Utils;
-
-use function count;
-use function implode;
-use function ltrim;
-use function min;
-use function str_replace;
-use function strlen;
-use function strpos;
-use function substr;
-use function trim;
-
-use const PREG_SPLIT_DELIM_CAPTURE;
 
 /**
  * Creates a new Description object given a body of text.
@@ -63,29 +50,14 @@ class DescriptionFactory
      */
     public function create(string $contents, ?TypeContext $context = null): Description
     {
-        $tokens   = $this->lex($contents);
-        $count    = count($tokens);
-        $tagCount = 0;
-        $tags     = [];
+        [$text, $tags] = $this->parse($this->lex($contents), $context);
 
-        for ($i = 1; $i < $count; $i += 2) {
-            $tags[]     = $this->tagFactory->create($tokens[$i], $context);
-            $tokens[$i] = '%' . ++$tagCount . '$s';
-        }
-
-        //In order to allow "literal" inline tags, the otherwise invalid
-        //sequence "{@}" is changed to "@", and "{}" is changed to "}".
-        //"%" is escaped to "%%" because of vsprintf.
-        //See unit tests for examples.
-        for ($i = 0; $i < $count; $i += 2) {
-            $tokens[$i] = str_replace(['{@}', '{}', '%'], ['@', '}', '%%'], $tokens[$i]);
-        }
-
-        return new Description(implode('', $tokens), $tags);
+        return new Description($text, $tags);
     }
 
     /**
      * Strips the contents from superfluous whitespace and splits the description into a series of tokens.
+     *
      *
      * @return string[] A series of tokens of which the description text is composed.
      */
@@ -98,7 +70,7 @@ class DescriptionFactory
             return [$contents];
         }
 
-        return Utils::pregSplit(
+        return preg_split(
             '/\{
                 # "{@}" is not a valid inline tag. This ensures that we do not treat it as one, but treat it literally.
                 (?!@\})
@@ -130,6 +102,35 @@ class DescriptionFactory
     }
 
     /**
+     * Parses the stream of tokens in to a new set of tokens containing Tags.
+     *
+     * @param string[] $tokens
+     *
+     * @return string[]|Tag[]
+     */
+    private function parse($tokens, ?TypeContext $context = null): array
+    {
+        $count = count($tokens);
+        $tagCount = 0;
+        $tags = [];
+
+        for ($i = 1; $i < $count; $i += 2) {
+            $tags[] = $this->tagFactory->create($tokens[$i], $context);
+            $tokens[$i] = '%' . ++$tagCount . '$s';
+        }
+
+        //In order to allow "literal" inline tags, the otherwise invalid
+        //sequence "{@}" is changed to "@", and "{}" is changed to "}".
+        //"%" is escaped to "%%" because of vsprintf.
+        //See unit tests for examples.
+        for ($i = 0; $i < $count; $i += 2) {
+            $tokens[$i] = str_replace(['{@}', '{}', '%'], ['@', '}', '%%'], $tokens[$i]);
+        }
+
+        return [implode('', $tokens), $tags];
+    }
+
+    /**
      * Removes the superfluous from a multi-line description.
      *
      * When a description has more than one line then it can happen that the second and subsequent lines have an
@@ -145,7 +146,7 @@ class DescriptionFactory
      */
     private function removeSuperfluousStartingWhitespace(string $contents): string
     {
-        $lines = Utils::pregSplit("/\r\n?|\n/", $contents);
+        $lines = explode("\n", $contents);
 
         // if there is only one line then we don't have lines with superfluous whitespace and
         // can use the contents as-is
@@ -155,9 +156,9 @@ class DescriptionFactory
 
         // determine how many whitespace characters need to be stripped
         $startingSpaceCount = 9999999;
-        for ($i = 1, $iMax = count($lines); $i < $iMax; ++$i) {
+        for ($i = 1; $i < count($lines); ++$i) {
             // lines with a no length do not count as they are not indented at all
-            if (trim($lines[$i]) === '') {
+            if (strlen(trim($lines[$i])) === 0) {
                 continue;
             }
 
@@ -168,7 +169,7 @@ class DescriptionFactory
 
         // strip the number of spaces from each line
         if ($startingSpaceCount > 0) {
-            for ($i = 1, $iMax = count($lines); $i < $iMax; ++$i) {
+            for ($i = 1; $i < count($lines); ++$i) {
                 $lines[$i] = substr($lines[$i], $startingSpaceCount);
             }
         }
