@@ -7,6 +7,7 @@
   "Buy now": "Buy now",
   "spins": "spins",
   "Buy spins": "Buy spins",
+  "Buy spin": "Buy spin",
   "History": "History",
   "Leaderboard": "Leaderboard",
   "Guidelines": "Guidelines",
@@ -19,7 +20,7 @@
   "You have": "You have",
   "Price": "Price",
   "Good bye": "Good bye",
-  "Do you want to comeback mytelpay?": "Do you want to comback mytelpay?",
+  "Do you want to comeback mytelpay?": "Do you want to Comeback mytelpay?",
   "Cancel": "Cancel",
   "Agree": "Agree",
   "This week": "This week",
@@ -33,7 +34,15 @@
   "1 Emoney": "1 Emoney",
   "Next spin": "Next spin",
   "spin": "spin",
-  "Menu /": "Menu /",
-  "free spins": "free spins"
+  "Menu/": "Menu/",
+  "free spins": "free spins",
+  "English": "English",
+  "off": "off",
+  "Log in 7 days": "Log in 7 days",
+  "Leader board": "Leader board",
+  "Vietnam": "Vietnam",
+  "ChangePoint": "ChangePoint",
+  "max": "Max",
+  "Send": "Send"
 }
 

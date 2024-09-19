@@ -3,11 +3,13 @@ $(document).ready(function () {
         $str = '';
         if (data.data.month.length > 0) {
             $.each(data.data.month, function (key, value) {
+                console.log(value);
                 $str += `<div class="leader-board-card mb-3">
                 <div class="row align-items-center">
                   <div class="col-md-2 mt-0 col-2">
                     <div class="box-number-card">
-                      <span>`+(key++)+`</span>
+                        <span>`+(key++)+`</span>
+                       <img src="/admin/upload-file/${value.anh_nguoi_dung}" alt="">
                     </div>
                   </div>
                   <div class="col-md-8 mt-0 col-8">
@@ -35,6 +37,7 @@ $(document).ready(function () {
                   <div class="col-md-2 mt-0 col-2">
                     <div class="box-number-card">
                       <span>`+(key++)+`</span>
+                       <img src="/admin/upload-file/${value.anh_nguoi_dung}" alt="">
                     </div>
                   </div>
                   <div class="col-md-8 mt-0 col-8">

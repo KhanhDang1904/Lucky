@@ -3,11 +3,27 @@
 use backend\models\HistoryReward;
 use backend\models\RotationConfig;
 use common\models\User;
-
+use backend\models\UserView; // Import mô hình UserView
+use Yii;
 class DashboardController extends CoreApiController
 {
+
+//    public function actionGetUserInfo()
+//    {
+//        $users = User::find()
+//            ->select(['vi_dien_tu'])
+//            ->asArray()
+//            ->all();
+//
+//        return $this->outputSuccess(['users' => $users]);
+//    }
+
+
     public function actionIndex()
     {
+        $user = User::findOne($this->uid);
+
+
         $month = User::find()
             ->leftJoin(HistoryReward::tableName(),
                 User::tableName().'.id = '.HistoryReward::tableName().'.user_id and '
@@ -38,6 +54,7 @@ class DashboardController extends CoreApiController
             $dataMonth[]=[
               'id'=>$model['id'],
               'hoten'=>$model['hoten'],
+                'anh_nguoi_dung'=>$model['anh_nguoi_dung'],
               'phone'=>is_null($model['dien_thoai'])?null:$this->makeString($model['dien_thoai']),
               'total_point'=>is_null($model['total_point'])?0:number_format($model['total_point']),
             ];
@@ -48,9 +65,10 @@ class DashboardController extends CoreApiController
                 'id'=>$model['id'],
                 'hoten'=>$model['hoten'],
                 'phone'=>is_null($model['dien_thoai'])?null:$this->makeString($model['dien_thoai']),
+                'anh_nguoi_dung'=>$model['anh_nguoi_dung'],
                 'total_point'=>is_null($model['total_point'])?0:number_format($model['total_point']),
             ];
         }
-        return $this->outputSuccess(['month'=>$dataMonth,'week'=>$dataWeek]);
+        return $this->outputSuccess([ 'point' => $user->vi_dien_tu,'month'=>$dataMonth,'week'=>$dataWeek]);
     }
 }

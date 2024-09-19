@@ -1,7 +1,7 @@
 <?php
 
 namespace backend\controllers;
-
+use backend\controllers\CoreController;
 use backend\models\HistoryReward;
 use backend\models\search\HistorySearch;
 use backend\models\search\PackageUserSearch;
@@ -10,9 +10,26 @@ use common\models\UserSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-
+use backend\models\UserView; // Import mô hình UserView
 class UserController extends CoreController
 {
+
+    public function actionGetViDienTu()
+    {
+        $id = Yii::$app->request->get('id');
+
+        // Lấy thông tin ví điện tử từ cơ sở dữ liệu
+        $user = UserView::find()->select('vi_dien_tu')->where(['id' => $id])->one();
+
+        if ($user) {
+            return $this->outputSuccess(['vi_dien_tu' => $user->vi_dien_tu]);
+        } else {
+            return $this->outputError('User not found');
+
+    }
+}
+
+    //.
     public function behaviors()
     {
         $arr_action = ['index','history','gift','update-gift','package'];

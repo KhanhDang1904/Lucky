@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title data-translate="Setting">ChangePoints</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="./assets/normalize.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel='stylesheet' href='./assets/lucky/css/sweetalert.css'>
+    <link rel='stylesheet' href='./assets/lucky/css/custom.css'>
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="./assets/lucky/js/Winwheel.min.js"></script>
+    <script type="text/javascript" src="./assets/lucky/js/TweenMax.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+</head>
+<body>
+<div class="lucky-wheel">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <img src="./assets/lucky/img/menu.png" alt="menu">
+            </button>
+            <a href="/">
+                <img src="./assets/lucky/img/mytelpay-logo%201.png" alt="menu">
+            </a>
+            <a class="navbar-brand" href="#" data-bs-toggle="modal" data-bs-target="#signOutModal">
+                <img src="./assets/lucky/img/signout.png" alt="signout">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link " data-translate="Home" aria-current="page" href="/">Home</a>
+                    <a class="nav-link" data-translate="History" href="./history.html">History</a>
+                    <a class="nav-link" data-translate="Leaderboard" href="./leader-board.html">Leaderboard</a>
+                    <a class="nav-link" data-translate="Guidelines" href="./Guidelines.html">Guidelines</a>
+                    <!--          <a class="nav-link" data-translate="Prices" href="./prices.html">Prices</a>-->
+                    <a class="nav-link" data-translate="Setting" href="./setting.html">Setting</a>
+                    <!--          <a class="nav-link" data-translate="Hotline" href="#">Hotline</a>-->
+                    <a class="nav-link active" href="./change-points.html" data-translate="ChangePoint">ChangePoint</a>
+
+                </div>
+                <button class="navbar-toggler open" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <img src="./assets/lucky/img/menu.png" alt="menu">
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="wheel">
+        <div class="container">
+            <div class="decor">
+                <img src="./assets/lucky/img/decor-1.png" alt="" class="decor-1">
+                <img src="./assets/lucky/img/decor-2.png" alt="" class="decor-2">
+            </div>
+            <div class="breadcrumb align-items-center justify-content-center pt-4">
+                <a href="./index.html" class="breadcrumb-link pe-1" data-translate="Menu/">Menu/ </a> <span
+                    class="text-primary fw-bolder" data-translate="ChangePoint"> ChangePoint</span>
+            </div>
+            <div class="setting-section">
+                <div class="setting-section-spin">
+                    <p data-translate="Spin">Spin</p>
+                    <div class="setting-section-spin-input">
+                        <input id="numberInput"  class="myInput" type="number"  placeholder="Nhập số lượng" value="" autocomplete="new-password" autocomplete="off" autocorrect="off" autocomplete="off">
+                    </div>
+                    <div class="setting-section-spin-MaxPoints">
+                        <div>
+                           <p data-translate="convert" id="spinOutput">convert :</p>
+                        </div>
+
+                         <div class="d-flex">
+                             <p  class="setting-section-MaxPoints-item">You have : 13000 poin</p>
+                             <p class="max" data-translate="max" data-id="1">Max</p>
+                             <div id="wallet-info"></div>
+                         </div>
+                    </div>
+                    <button data-translate="Send" id="submitButton">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="signOutModal" tabindex="-1" aria-labelledby="signOutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signOutModalLabel" data-translate="Goodbye">Goodbye</h5>
+            </div>
+            <div class="modal-body text-center">
+                <img src="./assets/lucky/img/img-signout.png" alt="" class="img-fluid">
+                <p data-translate="Do you want to comeback mytelpay?">Do you want to comeback mytelpay?</p>
+                <div class="d-flex">
+                    <button type="button" class="btn btn-primary btn-buy-now" data-bs-dismiss="modal" data-translate="Cancel">Cancel</button>
+                    <button type="button" class="btn btn-secondary btn-agree" data-translate="Agree">Agree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="assets/model.js"></script>
+<script type="text/javascript" src="assets/setting.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+            Ajax('/admin/dashboard', function (data) {
+                $MaxPoints = $( ".setting-section-MaxPoints-item" );
+                $MaxPoints.text('You have : '+data.data.point+' poin');
+                let currentPoint = data.data.point;
+
+                $("#numberInput").on("input", function () {
+                    let inputVal = $(this).val().replace(/\D/g, '');
+                    console.log(inputVal);
+                    if(parseInt(inputVal) > currentPoint){
+                        toastr.error('Điểm bạn nhập lớn hơn số điểm hiện tại ,vui lòng nhập lại !');
+                        $("#numberInput").val('');
+                        $("#spinOutput").text('');
+                    }else {
+                        let formattedVal = inputVal.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        $(this).val(formattedVal);
+                        let spins=Math.floor(inputVal / 100);
+                        $("#spinOutput").text("convert: "+ spins + "spin");
+                    }
+
+                });
+                $("#submitButton").on("click", function (e) {
+                    e.preventDefault();
+                    let rawVal = $("#numberInput").val().replace(/\D/g, '');
+                    if (rawVal === "" || isNaN(parseInt(rawVal))) {
+                        toastr.warning('Vui lòng nhập số điểm cần đổi', 'Cảnh báo');
+                    } else {
+
+                        toastr.success('Đổi điểm thành công!', 'Thành công');
+                    }
+                });
+
+            })
+        $(".max").on("click", function () {
+
+            Ajax('/admin/dashboard', function (data) {
+                $('.myInput').val(data.data.point.toString().replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+            })
+        });
+    });
+
+</script>
+</body>
+</html>

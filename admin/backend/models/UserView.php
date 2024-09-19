@@ -37,6 +37,17 @@ use Yii;
  */
 class UserView extends \yii\db\ActiveRecord
 {
+    private $db;
+    public function __construct($db) {
+        $this->db = $db;
+    }
+    public function getViDienTuById($id) {
+        $query = "SELECT vi_dien_tu FROM lucky_user_view WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn(); // Lấy giá trị cột vi_dien_tu
+    }
     /**
      * {@inheritdoc}
      */
@@ -100,4 +111,9 @@ class UserView extends \yii\db\ActiveRecord
             'point' => 'point',
         ];
     }
+
 }
+// models/UserView.php
+
+
+

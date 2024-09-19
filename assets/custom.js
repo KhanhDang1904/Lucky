@@ -209,7 +209,9 @@ $(document).ready(function () {
                 </div>
                 `
             })
-            $("#exampleModal").modal('show').find('.modal-body').html($str + `<button type="button" class="btn btn-primary btn-buy-now">Buy now</button>`)
+            $("#exampleModal").modal('show').find('.modal-body').html($str + `<button type="button" class="btn btn-primary btn-buy-now" data-translate="Buy now">Buy now</button>`)
+            let language = localStorage.getItem('language') || 'en';
+            changeLanguage(language)
         })
     })
     $(document).on('click', '.item-buy-spin', function () {
