@@ -73,7 +73,7 @@
                 <div class="setting-section-spin">
                     <p data-translate="Spin">Spin</p>
                     <div class="setting-section-spin-input">
-                        <input id="numberInput"  class="myInput" type="number"  placeholder="Nhập số lượng" value="" autocomplete="new-password" autocomplete="off" autocorrect="off" autocomplete="off">
+                        <input id="numberInput"  class="myInput" type="number" data-translate="Nhập số lượng" placeholder="Enter quantity" value="" autocomplete="new-password" autocomplete="off" autocorrect="off" autocomplete="off">
                     </div>
                     <div class="setting-section-spin-MaxPoints">
                         <div>
@@ -122,6 +122,7 @@
                 let currentPoint = data.data.point;
 
                 $("#numberInput").on("input", function () {
+
                     let inputVal = $(this).val().replace(/\D/g, '');
                     console.log(inputVal);
                     if(parseInt(inputVal) > currentPoint){
