@@ -2,6 +2,8 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/admin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/admin" isTestSource="false" packagePrefix="backend" />
       <sourceFolder url="file://$MODULE_DIR$/admin/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/admin/vendor/2amigos/yii2-ckeditor-widget" />
       <excludeFolder url="file://$MODULE_DIR$/admin/vendor/2amigos/yii2-date-time-picker-widget" />

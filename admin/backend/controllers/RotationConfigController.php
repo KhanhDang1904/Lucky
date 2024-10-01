@@ -43,7 +43,28 @@ class RotationConfigController extends CoreApiController
             }
         }
         $total_spin = intval($this->user->total_spin);
-        return $this->outputSuccess($data,['sound'=>$setting->value,'total_spin'=>$total_spin]);
+        return $this->outputSuccess($data,['sound'=>$setting->value,'total_spin'=>$total_spin, 'ok'=>'1']);
+    }
+
+    public function actionChangeSpin()
+    {
+        $user = User::findOne($this->uid);
+        $inputVal = intval($this->dataPost['pointInput']);
+        $currentPoint = $user->vi_dien_tu; // Điểm hiện tại
+        $currentSpin = $user->total_spin;
+        $PointChange = $currentPoint - $inputVal; // Tính toán điểm
+        $pointInput =($currentPoint - $PointChange)/100;
+        $SpinChange = $pointInput + $currentSpin; // Tính toán số lượt quay
+
+        $user->total_spin = $SpinChange;
+        $user->vi_dien_tu = $PointChange;
+
+//        $user->total_spin=$this->dataPost["SpinChange"];
+//        $user->vi_dien_tu=$this->dataPost["PointChange"];
+            if (!$user->save()){
+                throw new HttpException(500, \yii\helpers\Html::errorSummary($user));
+            }
+         return $user->attributes;
     }
     public function actionUpdateSpin()
     {
@@ -55,6 +76,8 @@ class RotationConfigController extends CoreApiController
                 throw new HttpException(500, \yii\helpers\Html::errorSummary($user));
             }
         }
+
+
         $reward = RotationConfig::findOne($this->dataPost['id']);
         //Save history reward
         $history_reward  = new  HistoryReward();

@@ -121,12 +121,15 @@
                 $MaxPoints.text('You have : '+data.data.point+' poin');
                 let currentPoint = data.data.point;
 
+                console.log(currentPoint);
+                let currentSpins = Math.floor(currentPoint / 100);
+
                 $("#numberInput").on("input", function () {
 
                     let inputVal = $(this).val().replace(/\D/g, '');
                     console.log(inputVal);
                     if(parseInt(inputVal) > currentPoint){
-                        toastr.error('Điểm bạn nhập lớn hơn số điểm hiện tại ,vui lòng nhập lại !');
+                        toastr.error('The points you entered are greater than the current points, please enter again!');
                         $("#numberInput").val('');
                         $("#spinOutput").text('');
                     }else {
@@ -141,10 +144,19 @@
                     e.preventDefault();
                     let rawVal = $("#numberInput").val().replace(/\D/g, '');
                     if (rawVal === "" || isNaN(parseInt(rawVal))) {
-                        toastr.warning('Vui lòng nhập số điểm cần đổi', 'Cảnh báo');
+                        toastr.warning('Please enter the points to be exchanged, Warning');
                     } else {
 
-                        toastr.success('Đổi điểm thành công!', 'Thành công');
+                        let inputVal =  $("#numberInput").val().replace(/\D/g, '');
+
+                        Ajax('/admin/rotation-config/change-spin', function (response) {
+                            toastr.success('Points exchanged successfully!, Success');
+                            $MaxPoints.text('You have : ' + response.vi_dien_tu + ' poin');
+                        }, {
+                            pointInput: inputVal,
+                            // PointChange: PointChange,
+                            // SpinChange: SpinChange
+                        })
                     }
                 });
 
@@ -156,6 +168,13 @@
 
             })
         });
+
+
+
+        // Ajax('/admin/rotation-config', function (data) {
+        //     let currentPoints = data.config.total_spin;
+        //    console.log(currentPoints);
+        // })
     });
 
 </script>

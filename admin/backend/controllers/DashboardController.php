@@ -22,7 +22,7 @@ class DashboardController extends CoreApiController
     public function actionIndex()
     {
         $user = User::findOne($this->uid);
-
+        $total_spin =  User::findOne($this->uid);
 
         $month = User::find()
             ->leftJoin(HistoryReward::tableName(),
@@ -69,6 +69,6 @@ class DashboardController extends CoreApiController
                 'total_point'=>is_null($model['total_point'])?0:number_format($model['total_point']),
             ];
         }
-        return $this->outputSuccess([ 'point' => $user->vi_dien_tu,'month'=>$dataMonth,'week'=>$dataWeek]);
+        return $this->outputSuccess([ 'point' => $user->vi_dien_tu,'total_spin' => $total_spin->total_spin ,'month'=>$dataMonth,'week'=>$dataWeek]);
     }
 }
